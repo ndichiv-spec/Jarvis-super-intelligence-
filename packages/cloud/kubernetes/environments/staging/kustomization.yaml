@@ -1,0 +1,49 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: jarvis-staging
+
+resources:
+  - ../../base
+
+replicas:
+  - name: api
+    count: 2
+  - name: brain
+    count: 2
+  - name: ai
+    count: 2
+  - name: memory
+    count: 2
+  - name: knowledge
+    count: 2
+  - name: automation
+    count: 2
+  - name: agents
+    count: 2
+  - name: orchestration
+    count: 2
+
+images:
+  - name: jarvis/api
+    newTag: staging
+  - name: jarvis/brain
+    newTag: staging
+  - name: jarvis/ai
+    newTag: staging
+  - name: jarvis/memory
+    newTag: staging
+  - name: jarvis/knowledge
+    newTag: staging
+  - name: jarvis/automation
+    newTag: staging
+  - name: jarvis/agents
+    newTag: staging
+  - name: jarvis/orchestration
+    newTag: staging
+
+configMapGenerator:
+  - name: jarvis-config
+    literals:
+      - JARVIS_ENVIRONMENT=staging
+      - LOG_LEVEL=info

@@ -1,0 +1,49 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: jarvis-development
+
+resources:
+  - ../../base
+
+replicas:
+  - name: api
+    count: 1
+  - name: brain
+    count: 1
+  - name: ai
+    count: 1
+  - name: memory
+    count: 1
+  - name: knowledge
+    count: 1
+  - name: automation
+    count: 1
+  - name: agents
+    count: 1
+  - name: orchestration
+    count: 1
+
+images:
+  - name: jarvis/api
+    newTag: latest
+  - name: jarvis/brain
+    newTag: latest
+  - name: jarvis/ai
+    newTag: latest
+  - name: jarvis/memory
+    newTag: latest
+  - name: jarvis/knowledge
+    newTag: latest
+  - name: jarvis/automation
+    newTag: latest
+  - name: jarvis/agents
+    newTag: latest
+  - name: jarvis/orchestration
+    newTag: latest
+
+configMapGenerator:
+  - name: jarvis-config
+    literals:
+      - JARVIS_ENVIRONMENT=development
+      - LOG_LEVEL=debug

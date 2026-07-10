@@ -1,0 +1,93 @@
+2026-07-09 16:57:34,120 [INFO] bootstrap: JARVIS Platform 2.0 booting...
+2026-07-09 16:57:34,122 [INFO] startup: Loading configuration...
+2026-07-09 16:57:34,123 [INFO] startup: Configuration loaded (profile=development)
+2026-07-09 16:57:34,124 [INFO] startup: Validating environment...
+2026-07-09 16:57:34,139 [WARNING] startup: Environment: configuration - Default secret key in use
+2026-07-09 16:57:34,140 [INFO] startup: Initializing kernel...
+2026-07-09 16:57:34,140 [INFO] startup: Kernel initialized with 12 services
+2026-07-09 16:57:34,141 [INFO] startup: Starting platform services...
+2026-07-09 16:57:34,141 [INFO] startup:   [OK] Security Platform (security)
+2026-07-09 16:57:34,142 [INFO] startup:   [OK] Memory Platform (memory)
+2026-07-09 16:57:34,142 [INFO] startup:   [OK] Knowledge Platform (knowledge)
+2026-07-09 16:57:34,143 [INFO] startup:   [OK] AI Runtime (ai)
+2026-07-09 16:57:34,144 [INFO] startup:   [OK] Communication Platform (communication)
+2026-07-09 16:57:34,144 [INFO] startup:   [OK] Automation Platform (automation)
+2026-07-09 16:57:34,145 [INFO] startup:   [OK] Extension Platform (extensions)
+2026-07-09 16:57:34,145 [INFO] startup:   [OK] Infrastructure Adapters (infrastructure)
+2026-07-09 16:57:34,146 [INFO] startup:   [OK] Service Gateway (gateway)
+2026-07-09 16:57:34,147 [INFO] startup:   [OK] Orchestration Engine (orchestration)
+2026-07-09 16:57:34,148 [INFO] startup:   [OK] Agents Platform (agents)
+2026-07-09 16:57:34,150 [INFO] startup:   [OK] Enterprise Platform (enterprise)
+2026-07-09 16:57:34,150 [INFO] startup: Platform services started
+2026-07-09 16:57:34,151 [INFO] runtime: Launching Gateway...
+2026-07-09 16:57:34,162 [INFO] procman: [gateway] Started (PID 19124)
+2026-07-09 16:57:34,181 [INFO] runtime: Launching Home...
+2026-07-09 16:57:34,326 [INFO] procman: [home] Started (PID 19404)
+2026-07-09 16:57:34,338 [INFO] runtime: Waiting for Gateway and Home to be ready...
+2026-07-09 16:57:35,578 [INFO] procman: [home] > jarvis-home@0.1.0 dev
+2026-07-09 16:57:35,580 [INFO] procman: [home] > next dev
+2026-07-09 16:57:38,674 [INFO] procman: [gateway] INFO:     Started server process [10724]
+2026-07-09 16:57:38,674 [INFO] procman: [gateway] INFO:     Waiting for application startup.
+2026-07-09 16:57:38,675 [INFO] procman: [gateway] INFO:     Application startup complete.
+2026-07-09 16:57:38,676 [INFO] procman: [gateway] ERROR:    [Errno 10048] error while attempting to bind on address ('0.0.0.0', 8000): [winerror 10048] only one usage of each socket address (protocol/network address/port) is normally permitted
+2026-07-09 16:57:38,676 [INFO] procman: [gateway] INFO:     Waiting for application shutdown.
+2026-07-09 16:57:38,676 [INFO] procman: [gateway] INFO:     Application shutdown complete.
+2026-07-09 16:57:39,088 [INFO] procman: [home]   ▲ Next.js 14.2.35
+2026-07-09 16:57:39,088 [INFO] procman: [home]   - Local:        http://localhost:3000
+2026-07-09 16:57:39,089 [INFO] procman: [home]  ✓ Starting...
+2026-07-09 16:57:42,423 [INFO] procman: [home]  ✓ Ready in 3.6s
+2026-07-09 16:57:42,974 [INFO] procman: [home]  ○ Compiling / ...
+2026-07-09 16:57:48,306 [INFO] procman: [home] The user aborted a request.
+2026-07-09 16:57:48,307 [INFO] procman: [home] Retrying 1/3...
+2026-07-09 16:57:48,308 [INFO] procman: [home] The user aborted a request.
+2026-07-09 16:57:48,309 [INFO] procman: [home] Retrying 1/3...
+2026-07-09 16:57:59,916 [INFO] procman: [home]  ✓ Compiled / in 17.5s (1340 modules)
+2026-07-09 16:58:00,497 [INFO] procman: [home]  GET / 200 in 1821ms
+2026-07-09 16:58:00,730 [INFO] runtime: All application processes ready
+2026-07-09 16:58:00,733 [INFO] procman: [home]  GET / 200 in 228ms
+2026-07-09 16:58:00,980 [INFO] procman: [home]  ✓ Compiled in 999ms (674 modules)
+2026-07-09 16:58:01,289 [INFO] browser: Opened browser: http://localhost:3000
+
+============================================================================
+  JARVIS AI PLATFORM
+  Version 2.0.0
+============================================================================
+
+  Loading Configuration...
+  [OK]
+
+  Initializing Kernel...
+  Ready
+
+  Loading Security Platform...
+  [OK] security
+  Loading Memory Platform...
+  [OK] memory
+  Loading Knowledge Platform...
+  [OK] knowledge
+  Loading AI Runtime...
+  [OK] ai
+  Loading Communication Platform...
+  [OK] communication
+  Loading Automation Platform...
+  [OK] automation
+  Loading Extension Platform...
+  [OK] extensions
+  Loading Infrastructure Adapters...
+  [OK] infrastructure
+  Loading Service Gateway...
+  [OK] gateway
+  Loading Orchestration Engine...
+  [OK] orchestration
+  Loading Agents Platform...
+  [OK] agents
+  Loading Enterprise Platform...
+  [OK] enterprise
+
+----------------------------------------------------------------------------
+  JARVIS STARTUP INCOMPLETE
+  gateway failed to start
+
+  12 services  |  Home PID 19404  |  27.14s
+============================================================================
+

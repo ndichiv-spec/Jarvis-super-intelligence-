@@ -1,0 +1,16 @@
+apiVersion: v2
+name: jarvis
+description: JARVIS AI Ecosystem - Helm chart for Kubernetes deployment
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+home: https://jarvis.ai
+sources:
+  - https://github.com/jarvis/jarvis
+maintainers:
+  - name: JARVIS Team
+    email: team@jarvis.ai
+annotations:
+  artifacthub.io/changes: |
+    - initial release
+  artifacthub.io/containsSecurityUpdates: "false"

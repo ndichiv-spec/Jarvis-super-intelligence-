@@ -1,0 +1,23 @@
+{{- $root := . -}}
+{{- range $name, $svc := .Values -}}
+{{- if and (kindIs "map" $svc) $svc.enabled (hasKey $svc "image") -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $name }}
+  namespace: {{ $root.Values.global.environment | default "jarvis" }}
+  labels:
+    app: {{ $name }}
+    {{- include "jarvis.labels" $root | nindent 4 }}
+spec:
+  selector:
+    app: {{ $name }}
+  ports:
+    - name: http
+      port: {{ $svc.port | default 8000 }}
+      targetPort: http
+      protocol: TCP
+  type: ClusterIP
+---
+{{- end }}
+{{- end }}

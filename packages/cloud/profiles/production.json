@@ -1,0 +1,17 @@
+{
+  "config": {
+    "logging.level": {
+      "value": "warning",
+      "source": "default"
+    },
+    "database.url": {
+      "value": "postgresql://prod-db:5432/jarvis",
+      "source": "default"
+    },
+    "redis.url": {
+      "value": "redis://prod-redis:6379/0",
+      "source": "default"
+    }
+  },
+  "extends": "staging"
+}

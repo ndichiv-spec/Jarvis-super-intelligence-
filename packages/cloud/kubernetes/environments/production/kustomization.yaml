@@ -1,0 +1,73 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: jarvis-production
+
+resources:
+  - ../../base
+
+replicas:
+  - name: api
+    count: 3
+  - name: brain
+    count: 3
+  - name: ai
+    count: 3
+  - name: memory
+    count: 3
+  - name: knowledge
+    count: 3
+  - name: automation
+    count: 3
+  - name: agents
+    count: 3
+  - name: orchestration
+    count: 3
+
+images:
+  - name: jarvis/api
+    newTag: production
+  - name: jarvis/brain
+    newTag: production
+  - name: jarvis/ai
+    newTag: production
+  - name: jarvis/memory
+    newTag: production
+  - name: jarvis/knowledge
+    newTag: production
+  - name: jarvis/automation
+    newTag: production
+  - name: jarvis/agents
+    newTag: production
+  - name: jarvis/orchestration
+    newTag: production
+
+configMapGenerator:
+  - name: jarvis-config
+    literals:
+      - JARVIS_ENVIRONMENT=production
+      - LOG_LEVEL=info
+
+patches:
+  - target:
+      kind: Deployment
+      name: .*
+    patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/resources
+        value:
+          limits:
+            cpu: "1"
+            memory: 1Gi
+          requests:
+            cpu: 500m
+            memory: 512Mi
+      - op: add
+        path: /spec/template/spec/topologySpreadConstraints
+        value:
+          - maxSkew: 1
+            topologyKey: topology.kubernetes.io/zone
+            whenUnsatisfiable: DoNotSchedule
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/part-of: jarvis

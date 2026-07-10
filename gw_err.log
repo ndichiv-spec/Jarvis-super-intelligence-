@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\Administrator\PycharmProjects\Jarvis\app\gateway_entry.py", line 7, in <module>
+    import uvicorn
+ModuleNotFoundError: No module named 'uvicorn'

@@ -1,0 +1,22 @@
+### Phase 2 Acceptance Checklist
+
+- [x] Domain layer implemented in `packages/core` only.
+- [x] No framework/infrastructure dependencies in core domain code.
+- [x] Identity domain implemented.
+- [x] Conversations domain implemented.
+- [x] Memory domain implemented.
+- [x] Knowledge domain implemented.
+- [x] Agents domain implemented.
+- [x] Workflows domain implemented.
+- [x] Projects domain implemented.
+- [x] Notifications domain implemented.
+- [x] Plugins domain implemented.
+- [x] Strongly typed domain events implemented.
+- [x] Immutable value objects implemented.
+- [x] Repository contracts defined as interfaces only.
+- [x] Ports defined for future infrastructure integration.
+- [x] Unit tests added for core rules/value objects.
+- [x] Domain documentation generated.
+- [x] Lint checks passed.
+- [x] Type checks passed.
+- [x] Unit tests passed.

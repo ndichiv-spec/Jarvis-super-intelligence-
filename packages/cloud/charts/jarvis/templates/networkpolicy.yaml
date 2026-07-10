@@ -1,0 +1,84 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: jarvis-default-deny
+  namespace: {{ .Values.global.environment | default "jarvis" }}
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: jarvis-allow-api
+  namespace: {{ .Values.global.environment | default "jarvis" }}
+spec:
+  podSelector:
+    matchLabels:
+      app: api
+  ingress:
+    - from:
+        - namespaceSelector: {}
+      ports:
+        - protocol: TCP
+          port: {{ .Values.api.port | default 8000 }}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: jarvis-allow-internal
+  namespace: {{ .Values.global.environment | default "jarvis" }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/part-of: jarvis-ai-ecosystem
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/part-of: jarvis-ai-ecosystem
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/part-of: jarvis-ai-ecosystem
+      ports:
+        - protocol: TCP
+          port: 8000
+        - protocol: TCP
+          port: 8100
+        - protocol: TCP
+          port: 8200
+        - protocol: TCP
+          port: 8300
+        - protocol: TCP
+          port: 8400
+        - protocol: TCP
+          port: 8500
+        - protocol: TCP
+          port: 8600
+        - protocol: TCP
+          port: 8700
+    - to:
+        - podSelector:
+            matchLabels:
+              app: postgres
+        ports:
+          - protocol: TCP
+            port: 5432
+    - to:
+        - podSelector:
+            matchLabels:
+              app: redis
+        ports:
+          - protocol: TCP
+            port: 6379
+    - to:
+        - podSelector:
+            matchLabels:
+              app: qdrant
+        ports:
+          - protocol: TCP
+            port: 6333

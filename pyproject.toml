@@ -1,0 +1,112 @@
+[project]
+name = "jarvis-workspace"
+version = "0.1.0"
+description = "JARVIS AI Ecosystem workspace foundation"
+readme = "README.md"
+requires-python = ">=3.13"
+authors = [{ name = "JARVIS Team" }]
+license = { text = "Proprietary" }
+dependencies = [
+  "fastapi>=0.116.0",
+  "pydantic>=2.11.0",
+  "sqlalchemy>=2.0.0",
+  "alembic>=1.16.0",
+  "uvicorn[standard]>=0.30.0",
+]
+
+[dependency-groups]
+dev = [
+  "black>=24.0.0",
+  "mypy>=1.10.0",
+  "pre-commit>=3.7.0",
+  "pytest>=8.0.0",
+  "pytest-cov>=5.0.0",
+  "ruff>=0.5.0",
+  "mkdocs>=1.6.0",
+  "mkdocs-material>=9.5.0",
+  "pytest-asyncio>=1.4.0",
+]
+
+[tool.uv]
+package = false
+
+[tool.uv.workspace]
+members = [
+  "packages/agents",
+  "packages/ai",
+  "packages/api",
+  "packages/automation",
+  "packages/brain",
+  "packages/cloud",
+  "packages/communication",
+  "packages/core",
+  "packages/desktopintel",
+  "packages/enterprise",
+  "packages/extensions",
+  "packages/planning",
+  "packages/studio",
+  "packages/infrastructure",
+  "packages/intelligence",
+  "packages/knowledge",
+  "packages/memory",
+  "packages/orchestration",
+  "packages/security",
+  "packages/tools",
+  "packages/vision",
+  "packages/voice",
+  "packages/webintel",
+]
+
+[tool.uv.sources]
+jarvis-agents = { workspace = true }
+jarvis-ai = { workspace = true }
+jarvis-api = { workspace = true }
+jarvis-automation = { workspace = true }
+jarvis-brain = { workspace = true }
+jarvis-cloud = { workspace = true }
+jarvis-communication = { workspace = true }
+jarvis-core = { workspace = true }
+jarvis-desktopintel = { workspace = true }
+jarvis-enterprise = { workspace = true }
+jarvis-extensions = { workspace = true }
+jarvis-infrastructure = { workspace = true }
+jarvis-intelligence = { workspace = true }
+jarvis-knowledge = { workspace = true }
+jarvis-memory = { workspace = true }
+jarvis-orchestration = { workspace = true }
+jarvis-planning = { workspace = true }
+jarvis-security = { workspace = true }
+jarvis-studio = { workspace = true }
+jarvis-tools = { workspace = true }
+jarvis-vision = { workspace = true }
+jarvis-voice = { workspace = true }
+jarvis-webintel = { workspace = true }
+
+[tool.ruff]
+target-version = "py313"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E","W","F","I","UP","B","N","RUF"]
+
+[tool.black]
+line-length = 100
+target-version = ["py313"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+namespace_packages = true
+explicit_package_bases = true
+mypy_path = ["packages"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["--strict-config", "--strict-markers"]
+
+[tool.coverage.run]
+source = ["packages"]
+
+[build-system]
+requires = ["hatchling>=1.25.0"]
+build-backend = "hatchling.build"

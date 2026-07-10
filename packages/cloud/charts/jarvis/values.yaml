@@ -1,0 +1,123 @@
+global:
+  environment: production
+  imageRegistry: ""
+  imageTag: latest
+  dnsDomain: jarvis.svc.cluster.local
+
+api:
+  enabled: true
+  replicas: 3
+  image: jarvis/api
+  port: 8000
+  resources:
+    limits: { cpu: "1", memory: 1Gi }
+    requests: { cpu: 500m, memory: 512Mi }
+  env:
+    JARVIS_ENVIRONMENT: production
+    LOG_LEVEL: info
+
+brain:
+  enabled: true
+  replicas: 3
+  image: jarvis/brain
+  port: 8100
+  resources:
+    limits: { cpu: "1", memory: 1Gi }
+    requests: { cpu: 500m, memory: 512Mi }
+
+ai:
+  enabled: true
+  replicas: 3
+  image: jarvis/ai
+  port: 8200
+  resources:
+    limits: { cpu: "2", memory: 2Gi }
+    requests: { cpu: "1", memory: 1Gi }
+
+memory:
+  enabled: true
+  replicas: 2
+  image: jarvis/memory
+  port: 8300
+  resources:
+    limits: { cpu: "1", memory: 1Gi }
+    requests: { cpu: 500m, memory: 512Mi }
+
+knowledge:
+  enabled: true
+  replicas: 2
+  image: jarvis/knowledge
+  port: 8400
+  resources:
+    limits: { cpu: "1", memory: 1Gi }
+    requests: { cpu: 500m, memory: 512Mi }
+
+automation:
+  enabled: true
+  replicas: 2
+  image: jarvis/automation
+  port: 8500
+  resources:
+    limits: { cpu: "1", memory: 1Gi }
+    requests: { cpu: 500m, memory: 512Mi }
+
+agents:
+  enabled: true
+  replicas: 2
+  image: jarvis/agents
+  port: 8600
+  resources:
+    limits: { cpu: "1", memory: 1Gi }
+    requests: { cpu: 500m, memory: 512Mi }
+
+orchestration:
+  enabled: true
+  replicas: 2
+  image: jarvis/orchestration
+  port: 8700
+  resources:
+    limits: { cpu: "1", memory: 1Gi }
+    requests: { cpu: 500m, memory: 512Mi }
+
+infrastructure:
+  postgres:
+    enabled: true
+    image: postgres:16-alpine
+    port: 5432
+    storage: 10Gi
+  redis:
+    enabled: true
+    image: redis:7-alpine
+    port: 6379
+    storage: 5Gi
+  qdrant:
+    enabled: true
+    image: qdrant/qdrant:v1.12.1
+    port: 6333
+    storage: 10Gi
+
+observability:
+  prometheus:
+    enabled: true
+    retentionDays: 15
+  grafana:
+    enabled: true
+    adminPassword: admin
+
+ingress:
+  enabled: true
+  domain: jarvis.example.com
+  tls: true
+  tlsSecret: jarvis-tls
+
+scaling:
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilization: 70
+  targetMemoryUtilization: 80
+
+backup:
+  enabled: true
+  schedule: "0 2 * * *"
+  retention: 7
+  storage: 50Gi

@@ -1,0 +1,24 @@
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    - always_declare_return_types
+    - annotate_overrides
+    - avoid_print
+    - avoid_redundant_argument_values
+    - avoid_unnecessary_containers
+    - avoid_void_async
+    - cancel_subscriptions
+    - constant_identifier_names
+    - directives_ordering
+    - join_return_with_assignment
+    - prefer_const_constructors
+    - prefer_const_declarations
+    - prefer_final_locals
+    - prefer_relative_imports
+    - require_trailing_commas
+    - sort_child_properties_last
+    - sort_constructors_first
+    - type_annotate_public_apis
+    - unawaited_futures
+    - use_super_parameters

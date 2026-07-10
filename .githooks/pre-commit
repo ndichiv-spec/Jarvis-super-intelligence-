@@ -1,0 +1,30 @@
+#!/bin/sh
+#
+# JARVIS AI Ecosystem — Pre-commit Hook
+#
+# Runs code formatting and basic validation before allowing commits.
+# To install: copy or symlink this file to .git/hooks/pre-commit
+#
+set -e
+
+echo "=== JARVIS Pre-commit Hook ==="
+
+# Check for debugging artifacts
+if git diff --cached --name-only --diff-filter=ACMR | grep -E '\.java$' | xargs grep -l '^\s*System\.out\.println\|e\.printStackTrace()\|\.toString()\s*$' 2>/dev/null; then
+    echo "ERROR: Remove debugging code (System.out/e.printStackTrace) before committing."
+    exit 1
+fi
+
+# Check for merge conflicts
+if git diff --cached --name-only | xargs grep -l '<<<<<<< \|=======$\|>>>>>>> ' 2>/dev/null; then
+    echo "ERROR: Merge conflict markers found. Resolve them before committing."
+    exit 1
+fi
+
+# Check for large files (>1MB)
+if git diff --cached --name-only | xargs -r ls -l 2>/dev/null | awk '{if($5 > 1048576) print $9}' | grep -q .; then
+    echo "ERROR: Files larger than 1MB detected. Use Git LFS instead."
+    exit 1
+fi
+
+echo "=== Pre-commit checks passed ==="

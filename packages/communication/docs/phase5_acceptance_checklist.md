@@ -1,0 +1,32 @@
+# Phase 5 Acceptance Checklist — Communication Platform
+
+- [x] Implemented only in `packages/communication`
+- [x] Event Bus supports publish/subscribe
+- [x] Event Bus supports priority handlers
+- [x] Event Bus supports filtered subscriptions
+- [x] Event Bus supports one-time subscriptions
+- [x] Event replay contract defined and integrated
+- [x] Dead-letter contract defined and integrated
+- [x] Command Bus dispatch implemented
+- [x] Validation pipeline hooks supported
+- [x] Authorization hooks supported
+- [x] Command execution contracts implemented
+- [x] Command result objects implemented
+- [x] Query Bus read-only dispatch implemented
+- [x] Query caching hook contract implemented
+- [x] Query projection/pagination/filtering contracts implemented
+- [x] Unified Message Bus abstraction implemented
+- [x] Pipeline engine with middleware chain implemented
+- [x] Retry/logging/metrics/authorization hook contracts implemented
+- [x] Event store interfaces defined (replay/snapshot/versioning)
+- [x] Execution context includes correlation/request/execution/parent/source/timestamp/security/workspace
+- [x] Immutable contracts for events/commands/queries/responses/notifications/errors/warnings
+- [x] Serialization contracts for future JSON/MessagePack/Protobuf/binary adapters
+- [x] Routing engine supports priority/grouping/broadcast/directed/conditional routing
+- [x] Scheduler contracts for delayed/recurring/timer/cron scheduling
+- [x] Observability interfaces for tracing/logging/metrics/timelines/diagnostics
+- [x] Unit tests added for event, command, query, pipeline, context, routing, validation
+- [x] Documentation generated: architecture, lifecycles, sequence diagrams, catalog, developer/extension guides
+- [x] Linting pass confirmed
+- [x] Typing pass confirmed
+- [x] Unit test pass confirmed

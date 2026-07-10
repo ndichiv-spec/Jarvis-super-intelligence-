@@ -1,0 +1,15 @@
+site_name: JARVIS AI Ecosystem
+nav:
+  - Home: index.md
+  - Architecture:
+      - Overview: architecture/overview.md
+  - API:
+      - Overview: api/overview.md
+  - ADR:
+      - Index: adr/index.md
+  - Standards:
+      - Coding Standards: standards/coding-standards.md
+      - Repository Standards: standards/repository-standards.md
+      - Directory Standards: standards/directory-standards.md
+theme:
+  name: material

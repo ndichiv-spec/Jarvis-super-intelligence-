@@ -1,0 +1,27 @@
+[project]
+name = "jarvis-desktopintel"
+version = "1.0.0"
+description = "JARVIS Desktop Intelligence Platform — Secure Cross-Platform Desktop Runtime"
+requires-python = ">=3.13"
+dependencies = [
+    "jarvis-core>=0.1.0",
+    "jarvis-api>=0.1.0",
+    "jarvis-communication>=0.1.0",
+    "jarvis-security>=0.1.0",
+    "httpx>=0.27.0",
+    "anyio>=4.4.0",
+]
+
+[build-system]
+requires = ["hatchling>=1.25.0"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/jarvis_desktopintel"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W"]

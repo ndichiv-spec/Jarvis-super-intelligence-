@@ -1,0 +1,16 @@
+{
+  "config": {
+    "logging.level": {
+      "value": "debug",
+      "source": "default"
+    },
+    "database.url": {
+      "value": "postgresql://localhost:5432/jarvis_dev",
+      "source": "default"
+    },
+    "redis.url": {
+      "value": "redis://localhost:6379/0",
+      "source": "default"
+    }
+  }
+}

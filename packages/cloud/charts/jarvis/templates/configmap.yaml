@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jarvis-config
+  namespace: {{ .Values.global.environment | default "jarvis" }}
+  labels:
+    {{- include "jarvis.labels" . | nindent 4 }}
+data:
+  JARVIS_ENVIRONMENT: {{ .Values.global.environment | quote }}
+  JARVIS_DNS_DOMAIN: {{ .Values.global.dnsDomain | quote }}

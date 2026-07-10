@@ -1,0 +1,52 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+rule_files:
+  - "alerts.yml"
+
+scrape_configs:
+  - job_name: 'jarvis-api'
+    static_configs:
+      - targets: ['api:8000']
+    metrics_path: /metrics
+
+  - job_name: 'jarvis-brain'
+    static_configs:
+      - targets: ['brain:8100']
+    metrics_path: /metrics
+
+  - job_name: 'jarvis-ai'
+    static_configs:
+      - targets: ['ai:8200']
+    metrics_path: /metrics
+
+  - job_name: 'jarvis-memory'
+    static_configs:
+      - targets: ['memory:8300']
+    metrics_path: /metrics
+
+  - job_name: 'jarvis-knowledge'
+    static_configs:
+      - targets: ['knowledge:8400']
+    metrics_path: /metrics
+
+  - job_name: 'jarvis-automation'
+    static_configs:
+      - targets: ['automation:8500']
+    metrics_path: /metrics
+
+  - job_name: 'jarvis-agents'
+    static_configs:
+      - targets: ['agents:8600']
+    metrics_path: /metrics
+
+  - job_name: 'jarvis-orchestration'
+    static_configs:
+      - targets: ['orchestration:8700']
+    metrics_path: /metrics

@@ -1,0 +1,350 @@
+version: "3.8"
+
+x-logging: &default-logging
+  driver: "json-file"
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+x-healthcheck: &default-healthcheck
+  interval: 30s
+  timeout: 10s
+  retries: 3
+  start_period: 40s
+
+networks:
+  jarvis-net:
+    name: jarvis-net
+    driver: bridge
+
+volumes:
+  postgres-data:
+  redis-data:
+  qdrant-data:
+  minio-data:
+  prometheus-data:
+  grafana-data:
+
+services:
+  # ── Infrastructure ───────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: jarvis-postgres
+    environment:
+      POSTGRES_DB: jarvis
+      POSTGRES_USER: jarvis
+      POSTGRES_PASSWORD: ${JARVIS_DB_PASSWORD:-jarvis}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - jarvis-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U jarvis"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    logging: *default-logging
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: jarvis-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - jarvis-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    logging: *default-logging
+    restart: unless-stopped
+
+  qdrant:
+    image: qdrant/qdrant:v1.12.1
+    container_name: jarvis-qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant-data:/qdrant/storage
+    networks:
+      - jarvis-net
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O-", "http://localhost:6333/healthz"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    logging: *default-logging
+    restart: unless-stopped
+
+  minio:
+    image: minio/minio:latest
+    container_name: jarvis-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${JARVIS_MINIO_USER:-jarvis}
+      MINIO_ROOT_PASSWORD: ${JARVIS_MINIO_PASSWORD:-jarvis123}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio-data:/data
+    networks:
+      - jarvis-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    logging: *default-logging
+    restart: unless-stopped
+
+  # ── Observability ───────────────────────────────────────────
+  prometheus:
+    image: prom/prometheus:v2.53.0
+    container_name: jarvis-prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/usr/share/prometheus/console_libraries"
+      - "--web.console.templates=/usr/share/prometheus/consoles"
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    networks:
+      - jarvis-net
+    logging: *default-logging
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:11.1.0
+    container_name: jarvis-grafana
+    environment:
+      GF_SECURITY_ADMIN_USER: ${JARVIS_GRAFANA_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${JARVIS_GRAFANA_PASSWORD:-admin}
+      GF_INSTALL_PLUGINS: ""
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./observability/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./observability/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+      - grafana-data:/var/lib/grafana
+    networks:
+      - jarvis-net
+    logging: *default-logging
+    restart: unless-stopped
+
+  # ── Application Services ─────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: docker/images/api.Dockerfile
+      target: production
+    image: jarvis/api:${JARVIS_VERSION:-latest}
+    container_name: jarvis-api
+    ports:
+      - "8000:8000"
+    environment:
+      JARVIS_ENVIRONMENT: ${JARVIS_ENVIRONMENT:-development}
+      JARVIS_DB_URL: postgresql+asyncpg://jarvis:${JARVIS_DB_PASSWORD:-jarvis}@postgres:5432/jarvis
+      JARVIS_REDIS_URL: redis://redis:6379/0
+      JARVIS_QDRANT_URL: http://qdrant:6333
+      JARVIS_MINIO_ENDPOINT: minio:9000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+    networks:
+      - jarvis-net
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+    logging: *default-logging
+    restart: unless-stopped
+
+  brain:
+    build:
+      context: .
+      dockerfile: docker/images/brain.Dockerfile
+      target: production
+    image: jarvis/brain:${JARVIS_VERSION:-latest}
+    container_name: jarvis-brain
+    ports:
+      - "8100:8100"
+    environment:
+      JARVIS_ENVIRONMENT: ${JARVIS_ENVIRONMENT:-development}
+      JARVIS_API_URL: http://api:8000
+      JARVIS_REDIS_URL: redis://redis:6379/0
+    depends_on:
+      api:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - jarvis-net
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD", "curl", "-f", "http://localhost:8100/health"]
+    logging: *default-logging
+    restart: unless-stopped
+
+  ai:
+    build:
+      context: .
+      dockerfile: docker/images/ai.Dockerfile
+      target: production
+    image: jarvis/ai:${JARVIS_VERSION:-latest}
+    container_name: jarvis-ai
+    ports:
+      - "8200:8200"
+    environment:
+      JARVIS_ENVIRONMENT: ${JARVIS_ENVIRONMENT:-development}
+      JARVIS_API_URL: http://api:8000
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - jarvis-net
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD", "curl", "-f", "http://localhost:8200/health"]
+    logging: *default-logging
+    restart: unless-stopped
+
+  memory:
+    build:
+      context: .
+      dockerfile: docker/images/memory.Dockerfile
+      target: production
+    image: jarvis/memory:${JARVIS_VERSION:-latest}
+    container_name: jarvis-memory
+    ports:
+      - "8300:8300"
+    environment:
+      JARVIS_ENVIRONMENT: ${JARVIS_ENVIRONMENT:-development}
+      JARVIS_API_URL: http://api:8000
+      JARVIS_QDRANT_URL: http://qdrant:6333
+    depends_on:
+      api:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+    networks:
+      - jarvis-net
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD", "curl", "-f", "http://localhost:8300/health"]
+    logging: *default-logging
+    restart: unless-stopped
+
+  knowledge:
+    build:
+      context: .
+      dockerfile: docker/images/knowledge.Dockerfile
+      target: production
+    image: jarvis/knowledge:${JARVIS_VERSION:-latest}
+    container_name: jarvis-knowledge
+    ports:
+      - "8400:8400"
+    environment:
+      JARVIS_ENVIRONMENT: ${JARVIS_ENVIRONMENT:-development}
+      JARVIS_API_URL: http://api:8000
+      JARVIS_QDRANT_URL: http://qdrant:6333
+    depends_on:
+      api:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+    networks:
+      - jarvis-net
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD", "curl", "-f", "http://localhost:8400/health"]
+    logging: *default-logging
+    restart: unless-stopped
+
+  automation:
+    build:
+      context: .
+      dockerfile: docker/images/automation.Dockerfile
+      target: production
+    image: jarvis/automation:${JARVIS_VERSION:-latest}
+    container_name: jarvis-automation
+    ports:
+      - "8500:8500"
+    environment:
+      JARVIS_ENVIRONMENT: ${JARVIS_ENVIRONMENT:-development}
+      JARVIS_API_URL: http://api:8000
+      JARVIS_REDIS_URL: redis://redis:6379/0
+    depends_on:
+      api:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - jarvis-net
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD", "curl", "-f", "http://localhost:8500/health"]
+    logging: *default-logging
+    restart: unless-stopped
+
+  agents:
+    build:
+      context: .
+      dockerfile: docker/images/agents.Dockerfile
+      target: production
+    image: jarvis/agents:${JARVIS_VERSION:-latest}
+    container_name: jarvis-agents
+    ports:
+      - "8600:8600"
+    environment:
+      JARVIS_ENVIRONMENT: ${JARVIS_ENVIRONMENT:-development}
+      JARVIS_API_URL: http://api:8000
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - jarvis-net
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD", "curl", "-f", "http://localhost:8600/health"]
+    logging: *default-logging
+    restart: unless-stopped
+
+  orchestration:
+    build:
+      context: .
+      dockerfile: docker/images/orchestration.Dockerfile
+      target: production
+    image: jarvis/orchestration:${JARVIS_VERSION:-latest}
+    container_name: jarvis-orchestration
+    ports:
+      - "8700:8700"
+    environment:
+      JARVIS_ENVIRONMENT: ${JARVIS_ENVIRONMENT:-development}
+      JARVIS_API_URL: http://api:8000
+      JARVIS_BRAIN_URL: http://brain:8100
+    depends_on:
+      api:
+        condition: service_healthy
+      brain:
+        condition: service_healthy
+    networks:
+      - jarvis-net
+    healthcheck:
+      <<: *default-healthcheck
+      test: ["CMD", "curl", "-f", "http://localhost:8700/health"]
+    logging: *default-logging
+    restart: unless-stopped
