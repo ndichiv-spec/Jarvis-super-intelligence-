@@ -1,0 +1,1 @@
+- [GitHub API publishing fallback](github-api-publishing.md) — when local Git credentials fail, use the attached connector, throttle writes, and build large trees incrementally.
