@@ -1,0 +1,47 @@
+{
+  "reasoning": {
+    "name": "reasoning",
+    "description": "Logical reasoning and analysis",
+    "proficiency": 0.5,
+    "last_practiced": "2026-04-15T17:36:34.376302",
+    "practice_count": 0,
+    "success_rate": 1.0,
+    "metadata": {}
+  },
+  "coding": {
+    "name": "coding",
+    "description": "Code generation and debugging",
+    "proficiency": 0.5,
+    "last_practiced": "2026-04-15T17:36:34.380615",
+    "practice_count": 0,
+    "success_rate": 1.0,
+    "metadata": {}
+  },
+  "research": {
+    "name": "research",
+    "description": "Information gathering and synthesis",
+    "proficiency": 0.5,
+    "last_practiced": "2026-04-15T17:36:34.387883",
+    "practice_count": 0,
+    "success_rate": 1.0,
+    "metadata": {}
+  },
+  "communication": {
+    "name": "communication",
+    "description": "Natural language communication",
+    "proficiency": 0.6,
+    "last_practiced": "2026-04-15T17:36:34.389879",
+    "practice_count": 0,
+    "success_rate": 1.0,
+    "metadata": {}
+  },
+  "problem_solving": {
+    "name": "problem_solving",
+    "description": "Complex problem solving",
+    "proficiency": 0.5,
+    "last_practiced": "2026-04-15T17:36:34.393145",
+    "practice_count": 0,
+    "success_rate": 1.0,
+    "metadata": {}
+  }
+}
